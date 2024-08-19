@@ -416,7 +416,7 @@ JavaScript的所有对象都是动态的，即使内置的函数，我们也可�
 
 #### map
 
-```JSON
+```JS
 function pow(x) {
     return x * x;
 }
