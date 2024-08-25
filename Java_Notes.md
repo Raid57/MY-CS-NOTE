@@ -285,3 +285,70 @@ String[] result = s.parallel() // 变成一个可以并行处理的Stream
 - `boolean anyMatch(Predicate<? super T>)`：测试是否至少有一个元素满足测试条件。
 
 最后一个常用的方法是`forEach()`，它可以循环处理`Stream`的每个元素，我们经常传入`System.out::println`来打印`Stream`的元素：
+
+
+#Spring
+##注解
+###Component VS ComponentScan
+@Component and @ComponentScan are for different purposes.
+
+@Component indicates that a class might be a candidate for creating a bean. It's like putting a hand up.
+@ComponentScan is searching packages for Components. Trying to find out who all put their hands up.
+
+@Component是标记要谁要成为Bean，@ComponentScan是标记包（有Bean的包）
+Component Scan in a Spring Boot Project
+If your other package hierarchies are below your main app with the @SpringBootApplication annotation, you’re covered by the implicit Component Scan.
+If there are beans/components in other packages that are not sub-packages of the main package, you should manually add them as @ComponentScan
+Consider the class below:
+
+```JAVA
+package com.in28minutes.springboot.basics.springbootin10steps;
+
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+@SpringBootApplication
+public class SpringbootIn10StepsApplication {
+    public static void main(String[] args) {
+        ApplicationContext applicationContext = 
+SpringApplication.run(SpringbootIn10StepsApplication.class, args);
+        for (String name: applicationContext.getBeanDefinitionNames()) {
+            System.out.println(name);
+        }
+    }
+}
+```
+@SpringBootApplication is defined in the SpringbootIn10StepsApplication class which is in the package com.in28minutes.springboot.basics.springbootin10steps
+
+@SpringBootApplication defines an automatic Component Scan on the package com.in28minutes.springboot.basics.springbootin10steps.
+
+You are fine if all your components are defined in the above package or a sub-package of it.
+
+However, let’s say one of the components is defined in package com.in28minutes.springboot.somethingelse
+
+In this case, you would need to add the new package into Component Scan.
+
+You have two options:
+
+Define @ComponentScan(“com.in28minutes.springboot”) 
+- This would scan the entire parent tree of com.in28minutes.springboot.
+
+Or define two specific Component Scans by using an array. 
+- @ComponentScan({“com.in28minutes.springboot.basics.springbootin10steps”,”com.in28minutes.springboot.somethingelse”})
+Option 1:
+
+```JAVA
+@ComponentScan(“com.in28minutes.springboot”)
+@SpringBootApplication
+public class SpringbootIn10StepsApplication {
+```
+
+Option 2:
+```JAVA
+@ComponentScan({"com.in28minutes.springboot.basics.springbootin10steps","com.in28minutes.springboot.somethingelse"})
+@SpringBootApplication
+public class SpringbootIn10StepsApplication {
+```
+
